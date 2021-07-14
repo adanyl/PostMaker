@@ -1,18 +1,14 @@
 module Posts
   class FeedFilter < BaseFilter
     def perform
-      # TODO:
-      # 1. apply all filters that come from input
-      #   - filter by title/post contains search_text
-      #   - filter by social networks
-      #   - filter by date range (date_from, date_to)
-
-      base_scope
+      if input[:search_text] == nil || input[:social_networks] == nil || input[:date_from] == nil || input[:date_to] == nil
+      base_scope  
+      else
+        SocialContent.where("title like ? or post like ?", "%" + input[:search_text] + "%", "%" + input[:search_text] + "%").all.includes(:social_posts).all.includes(:social_posts).where('schedule_time >= ? and schedule_time <= ? and social_network IN (?)',  input[:date_from], input[:date_to], input[:social_networks]).references(:social_posts)
+      end
     end
-
     private
 
-    # NOTE: this method can be modified
     def base_scope
       SocialContent.all.includes(:social_posts)
     end

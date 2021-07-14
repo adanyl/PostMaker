@@ -14,19 +14,15 @@ module Posts
     attr_reader :input, :post
 
     def perform
-      # TODO:
-      # 1. create SocialContent with title and post from input
-      # 2. create as many related SocialPosts as many social_networks you have selected
-      # 3. care about data consistency (Please read about ActiveRecord::Base.transaction)
-      # 4. You must not create any SocialContent and SocialPosts:
-      #   - if schedule_time in the past
-      #   - if social_networks is empty array
-      #   - if post length more then 250 symbols
-      #   - if title length more then 50 symbols
-
-      errors.add(:base, 'Perform functionality not implemented yet!')
-
-      @post = nil # Please replace 'nil' with real created post
+      input[:social_networks].drop(1).each do |social_network|
+        if input[:schedule_time] < DateTime.now() || input[:social_networks].empty?  || input[:post].length > 250 || input[:title].length > 50 
+          social_contents = nil
+          @post = nil
+        else
+          @social_contents = SocialContent.create(:title => input[:title], :post => input[:post]) 
+          @post = SocialPost.create(:schedule_time => input[:schedule_time], :social_content => @social_contents, :social_network => social_network)
+        end
+      end
     end
   end
 end

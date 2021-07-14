@@ -3,6 +3,8 @@ class PostsController < ApplicationController
     input = Posts::Input.new(search_params)
     feed_items = Posts::FeedFilter.new(input).perform
 
+
+
     render :index, locals: { feed_items: feed_items }
   end
 
@@ -23,11 +25,10 @@ class PostsController < ApplicationController
       render :new, locals: { form: form }
     end
   end
-
+  
   def destroy
-    # TODO: add ability to destroy any post
-    # 1. Destroy SocialContent
-    # 2. Destroy related SocialPosts
+    SocialContent.destroy(params[:id])
+    SocialPost.where(social_content_id: params[:id]).destroy_all 
   end
 
   private
