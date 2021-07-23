@@ -27,9 +27,7 @@ class PostsController < ApplicationController
   end
   
   def destroy
-    @post = SocialPost.find_by(social_content_id: params[:id])
-    @post.destroy
-    @content = SocialContent.find_by(id: params[:id])
+    @content = SocialContent.find(params[:id])
     @content.destroy
     redirect_to root_path
   end
